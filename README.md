@@ -256,6 +256,98 @@ docker  build  -t  ashupy:v1  .
    
 ```
 
+### Building java code to image
+
+```
+ec2-user@ip-172-31-65-105 images]$ docker  build  -t  ashujava:v1  ./java  
+Sending build context to Docker daemon  3.072kB
+Step 1/7 : FROM openjdk
+ ---> c9022ce77bf9
+Step 2/7 : LABEL  email="ashutoshh@linux.com"
+ ---> Running in b4fa8fd29f13
+Removing intermediate container b4fa8fd29f13
+ ---> a765f4661ae8
+Step 3/7 : RUN mkdir /code
+ ---> Running in de61ea3fb60b
+Removing intermediate container de61ea3fb60b
+ ---> 2d7c02d1aa8e
+Step 4/7 : COPY  hello.java /code/hello.java
+ ---> 8d0c9bb65300
+Step 5/7 : WORKDIR  /code
+ ---> Running in 3d94c1d1faa3
+Removing intermediate container 3d94c1d1faa3
+ ---> 6d9066c635b4
+Step 6/7 : RUN javac hello.java
+ ---> Running in 029c32fb70de
+Removing intermediate container 029c32fb70de
+ ---> 10b3a9ce35c6
+Step 7/7 : CMD  ["java","myclass"]
+ ---> Running in 90c6f1142a49
+Removing intermediate container 90c6f1142a49
+ ---> 775faac9fa91
+Successfully built 775faac9fa91
+Successfully tagged ashujava:v1
+
+```
+
+## trick to stop all the running containers
+
+```
+ docker  kill  $(docker  ps -q)
+ 
+```
+
+## remove all the containers
+
+```
+[ec2-user@ip-172-31-65-105 images]$ docker  rm   ashuc1 
+ashuc1
+[ec2-user@ip-172-31-65-105 images]$ docker  rm  $(docker  ps -aq)  
+56cac68a8b0f
+bb143f5baa2b
+39a1159ca9af
+f79c092e6591
+
+```
+
+## image sharing with docker registry 
+
+<img src="imgs.png">
+
+## docker image name reality 
+
+<img src="imgname.png">
+
+### pushing image to docker hub 
+
+```
+47  docker  tag   ashujava:v1   dockerashu/ashujava:v1
+   48  docker  images
+   49  history 
+   50  docker  images
+   51  history 
+   52  docker  images
+   53  history 
+[ec2-user@ip-172-31-65-105 images]$ docker  login  -u dockerashu 
+Password: 
+WARNING! Your password will be stored unencrypted in /home/ec2-user/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[ec2-user@ip-172-31-65-105 images]$ docker  push dockerashu/ashujava:v1
+The push refers to repository [docker.io/dockerashu/ashujava]
+9131368f73ec: Pushed 
+b73448a1e5f8: Pushed 
+13b4a4c7b94e: Pushed 
+0ae5ce6b98ab: Mounted from library/openjdk 
+59e5edb482b6: Mounted from library/openjdk 
+ecc451d178ba: Mounted from library/openjdk 
+v1: digest: sha256:9c9fd645c407a958810ed9db2f59cccb334cb3194bf72e1995a660c71e262d2b size: 1575
+[ec2-user@ip-172-31-65-105 images]$ docker  logout 
+Removing login credentials for https://index.docker.io/v1/
+
+```
 
 
 
