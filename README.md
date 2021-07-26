@@ -349,5 +349,35 @@ Removing login credentials for https://index.docker.io/v1/
 
 ```
 
+## checking current resources by Container 
+
+```
+ec2-user@ip-172-31-65-105 images]$ docker  stats 
+
+CONTAINER ID   NAME      CPU %     MEM USAGE / LIMIT    MEM %     NET I/O           BLOCK I/O        PIDS
+4443edbc0f67   ashuc2    0.01%     5.41MiB / 7.788GiB   0.07%     710B / 0B         1.5MB / 17.4kB   1
+fa03537624f1   ashuc1    0.01%     796KiB / 7.788GiB    0.01%     12.7kB / 11.9kB   164kB / 0B       1
+^C
+
+```
+
+## cgroups 
+
+<img src="cg.png">
+
+## implementation of cgroup 
+
+```
+[ec2-user@ip-172-31-65-105 images]$ docker run -itd --name ashuc3  --memory 100m  ashupy:v1  
+d28a9ac6246af777784786e3b3844fb3335a31902cbcb6542faa80efdf8e4385
+[ec2-user@ip-172-31-65-105 images]$ docker run -itd --name ashuc4  --memory 200m --cpu-shares=30   ashupy:v1  
+0d15a9c3bd9029615481437f7a1fd9c56b507f11d9ca140bd42afa80bcd0c7c6
+[ec2-user@ip-172-31-65-105 images]$ 
+
+
+```
+
+
+
 
 
