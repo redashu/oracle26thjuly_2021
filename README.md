@@ -234,3 +234,28 @@ bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbi
 
 ```
 
+## Docker image building 
+
+<img src="buildtool.png">
+
+### Python sample code 
+
+<img src="dockerpy.png">
+
+```
+docker  build  -t  ashupy:v1  .
+
+```
+
+### creating container 
+
+```
+16  docker run -itd --name ashuc1 ashupy:v1  
+   17  docker ps
+   18  docker logs -f  ashuc1 
+   
+```
+
+
+
+
