@@ -279,3 +279,18 @@ round-trip min/avg/max = 0.073/0.086/0.100 ms
   
 ```
 
+###  more 
+
+```
+ 192  history 
+  193  docker  rm $(docker  ps -aq) -f
+  194  docker network rm $(docker  network ls -q) 
+  195  docker  network ls
+  196  docker  rm $(docker  ps -aq) -f
+  197  docker network rm $(docker  network ls -q) 
+  198  docker  network ls
+  
+  
+ ```
+ 
+ 
