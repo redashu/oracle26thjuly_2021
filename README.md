@@ -417,5 +417,88 @@ docker build -t  ashujavaweb:v1  -f multistage.dockerfile  .
  docker  run -tid  --name ashujc1 -p 8877:8080  ashujavaweb:v1  
 ```
 
+### COntainer storage 
+
+<img src="st.png">
+
+## container ephemral nature 
+
+```
+[ec2-user@ip-172-31-65-105 java-springboot]$ docker  run  -it --name ashuc1  oraclelinux:8.3  bash 
+[root@389f21b0717a /]# ls
+bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+[root@389f21b0717a /]# mkdir  hello oracle this is docker 
+[root@389f21b0717a /]# ls
+bin   dev     etc    home  lib    media  opt     proc  run   srv  this  usr
+boot  docker  hello  is    lib64  mnt    oracle  root  sbin  sys  tmp   var
+[root@389f21b0717a /]# exit
+exit
+[ec2-user@ip-172-31-65-105 java-springboot]$ docker  rm   ashuc1 
+ashuc1
+[ec2-user@ip-172-31-65-105 java-springboot]$ docker  run  -it --name ashuc1  oraclelinux:8.3  bash 
+[root@440a6bbbd805 /]# ls
+bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+[root@440a6bbbd805 /]# exit
+exit
+[ec2-user@ip-172-31-65-105 java-springboot]$ 
+
+```
+
+### 
+
+```
+[ec2-user@ip-172-31-65-105 java-springboot]$ docker  volume  create  ashuvol1 
+ashuvol1
+[ec2-user@ip-172-31-65-105 java-springboot]$ docker  volume  ls
+DRIVER    VOLUME NAME
+local     4ced37bc5cd0284bec7eb818bce71832ce418bad01c5296c286c5ab91ed5ca4e
+local     ashuvol1
+local     bvol1
+local     jeyvol1
+local     nishantvol1
+[ec2-user@ip-172-31-65-105 java-springboot]$ docker  volume  inspect  ashuvol1 
+[
+    {
+        "CreatedAt": "2021-07-27T11:07:30Z",
+        "Driver": "local",
+        "Labels": {},
+        "Mountpoint": "/var/lib/docker/volumes/ashuvol1/_data",
+        "Name": "ashuvol1",
+        "Options": {},
+        "Scope": "local"
+    }
+]
+
+```
+
+## creating and attaching volume 
+
+```
+ec2-user@ip-172-31-65-105 java-springboot]$ docker run -it --name ashuc12  -v ashuvol1:/mydata:rw  oraclelinux:8.3 bash
+[root@8639f259eac3 /]# ls
+bin  boot  dev  etc  home  lib  lib64  media  mnt  mydata  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+[root@8639f259eac3 /]# cd  mydata/
+[root@8639f259eac3 mydata]# ls
+hello  is  me  this  world
+[root@8639f259eac3 mydata]# exit
+exit
+[ec2-user@ip-172-31-65-105 java-springboot]$ 
+[ec2-user@ip-172-31-65-105 java-springboot]$ 
+[ec2-user@ip-172-31-65-105 java-springboot]$ docker run -it --name x1  -v  ashuvol1:/new:ro  alpine sh 
+/ # 
+/ # 
+/ # cd  /new/
+/new # ls
+hello  is     me     this   world
+/new # mkdir hhh
+mkdir: can't create directory 'hhh': Read-only file system
+/new # exit
+
+```
+
+## Docker volume set
+
+<img src="vol11.png">
+
 
  
