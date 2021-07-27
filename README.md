@@ -293,4 +293,129 @@ round-trip min/avg/max = 0.073/0.086/0.100 ms
   
  ```
  
+ ## Introduction to docker compose 
+ 
+ <img src="compose.png">
+ 
+ ### Install docker compose 
+ 
+ ```
+ [ec2-user@ip-172-31-65-105 images]$ sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   633  100   633    0     0  16657      0 --:--:-- --:--:-- --:--:-- 16657
+100 12.1M  100 12.1M    0     0  66.7M      0 --:--:-- --:--:-- --:--:-- 66.7M
+[ec2-user@ip-172-31-65-105 images]$ sudo chmod +x /usr/local/bin/docker-compose
+[ec2-user@ip-172-31-65-105 images]$ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+[ec2-user@ip-172-31-65-105 images]$ docker-compose  -v
+docker-compose version 1.29.2, build 5becea4c
+
+```
+
+## COmpose yaml 
+
+### Example 1
+
+```
+[ec2-user@ip-172-31-65-105 images]$ sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   633  100   633    0     0  16657      0 --:--:-- --:--:-- --:--:-- 16657
+100 12.1M  100 12.1M    0     0  66.7M      0 --:--:-- --:--:-- --:--:-- 66.7M
+[ec2-user@ip-172-31-65-105 images]$ sudo chmod +x /usr/local/bin/docker-compose
+[ec2-user@ip-172-31-65-105 images]$ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+[ec2-user@ip-172-31-65-105 images]$ docker-compose  -v
+docker-compose version 1.29.2, build 5becea4c
+
+```
+
+
+### running compose file 
+
+```
+219  docker-compose up  -d
+  220  docker-compose  ps
+  221  docker-compose  stop
+  222  docker-compose  ps
+  223  docker-compose  start
+  224  docker-compose  ps
+  225  docker-compose  logs
+  226  history 
+  
+```
+
+### Example 2 
+
+```
+version: '3.8'
+services:
+    ashuapp1:
+        image: alpine
+        container_name: ashuc222
+        command: ping fb.com 
+    ashuapp2:
+        image: ashuhttpd:v1 
+        container_name: ashucc2555 
+        ports:
+            - "4455:80"
+   
+   
+```
+
+### 
+
+```
+ docker-compose  ps
+  235  docker-compose  logs  ashuapp1
+  236  history 
+  237  docker-compose ps
+  238  docker-compose  stop 
+  239  docker-compose  ps
+  240  history 
+  241  docker-compose ps
+  242  docker-compose  start  ashuapp1
+  243  docker-compose ps
+  244  docker-compose  stop  ashuapp1
+  
+ ```
+ 
+ ###
+ 
+ ```
+ 
+ ashuc222     ping fb.com                     Exit 137        
+ashucc2555   /bin/sh -c httpd -DFOREGROUND   Exit 0          
+[ec2-user@ip-172-31-65-105 ashucompose]$ docker-compose  start
+Starting ashuapp1 ... done
+Starting ashuapp2 ... done
+[ec2-user@ip-172-31-65-105 ashucompose]$ docker-compose  down
+Stopping ashuc222   ... done
+Stopping ashucc2555 ... done
+Removing ashuc222   ... done
+Removing ashucc2555 ... done
+Removing network ashucompose_default
+
+```
+
+### docker compose 
+
+```
+ docker-compose  up --build  -d
+ 
+```
+
+## Multi stage Dockerfile build operation 
+
+```
+docker build -t  ashujavaweb:v1  -f multistage.dockerfile  . 
+
+```
+
+### creating container 
+
+```
+ docker  run -tid  --name ashujc1 -p 8877:8080  ashujavaweb:v1  
+```
+
+
  
