@@ -152,4 +152,111 @@ commit: a03fbcf166e6f74ef224d4a63be4277d017bb62e
 ```
 
 
+## Introduction to POD 
 
+<img src="pod.png">
+
+## first POD 
+
+<img src="po1.png">
+
+
+## checking yaml file syntax 
+
+```
+❯ ls
+ashupod1.yaml
+❯ kubectl  version
+Client Version: version.Info{Major:"1", Minor:"21", GitVersion:"v1.21.1", GitCommit:"5e58841cce77d4bc13713ad2b91fa0d961e69192", GitTreeState:"clean", BuildDate:"2021-05-12T14:18:45Z", GoVersion:"go1.16.4", Compiler:"gc", Platform:"darwin/amd64"}
+Server Version: version.Info{Major:"1", Minor:"21", GitVersion:"v1.21.2", GitCommit:"092fbfbf53427de67cac1e9fa54aaa09a28371d7", GitTreeState:"clean", BuildDate:"2021-06-16T12:53:14Z", GoVersion:"go1.16.5", Compiler:"gc", Platform:"linux/amd64"}
+❯ kubectl  apply -f  ashupod1.yaml --dry-run=client
+pod/ashupod1 created (dry run)
+
+```
+
+### deploying pod 
+
+```
+❯ kubectl  apply -f  ashupod1.yaml
+pod/ashupod1 created
+❯ kubectl   get  pods
+NAME       READY   STATUS    RESTARTS   AGE
+ashupod1   1/1     Running   0          21s
+❯ kubectl   logs -f  ashupod1
+PING fb.com (157.240.16.35): 56 data bytes
+^C
+
+
+```
+
+### more details about pod 
+
+```
+
+❯ kubectl  get  pods -o wide
+NAME       READY   STATUS    RESTARTS   AGE    IP           NODE       NOMINATED NODE   READINESS GATES
+ashupod1   1/1     Running   0          2m7s   172.17.0.3   minikube   <none>           <none>
+
+░▒▓ ~ ······························································································ 02:56:23 PM ▓▒░─╮
+❯                                                                                                                     ─╯
+
+```
+
+### accessing container inside pod 
+
+```
+❯ kubectl  exec -it   ashupod1  -- sh
+/ # 
+/ # 
+/ # cat  /etc/os-release 
+NAME="Alpine Linux"
+ID=alpine
+VERSION_ID=3.14.0
+PRETTY_NAME="Alpine Linux v3.14"
+HOME_URL="https://alpinelinux.org/"
+BUG_REPORT_URL="https://bugs.alpinelinux.org/"
+/ # exit
+
+
+```
+
+### kubectl remote cluster connection 
+
+```
+❯ kubectl  get  no  --kubeconfig  admin.conf
+NAME         STATUS   ROLES                  AGE     VERSION
+masternode   Ready    control-plane,master   7h21m   v1.21.3
+minion1      Ready    <none>                 7h19m   v1.21.3
+minion2      Ready    <none>                 7h20m   v1.21.3
+
+
+```
+
+### merging two cluster details 
+
+<img src="details.png">
+
+### COntext in k8s cluster 
+
+```
+❯ kubectl  get  nodes
+NAME       STATUS   ROLES                  AGE   VERSION
+minikube   Ready    control-plane,master   7d    v1.21.2
+❯ kubectl   config  get-contexts
+CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+          kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   
+*         minikube                      minikube     minikube           default
+❯ 
+❯ 
+❯ kubectl   config  use-context   kubernetes-admin@kubernetes
+Switched to context "kubernetes-admin@kubernetes".
+❯ kubectl  get  nodes
+NAME         STATUS   ROLES                  AGE     VERSION
+masternode   Ready    control-plane,master   7h55m   v1.21.3
+minion1      Ready    <none>                 7h53m   v1.21.3
+minion2      Ready    <none>                 7h54m   v1.21.3
+
+```
+
+
+  
