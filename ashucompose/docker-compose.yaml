@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+    ashuapp1:
+        image: alpine
+        container_name: ashuc222
+        command: ping fb.com 
+    ashuapp2:
+        image: ashuhttpd:v1 
+        container_name: ashucc2555 
+        ports:
+            - "4455:80"
+    ashuapp3: 
+        image: ashuwebng:v2 # we want to build image by this name 
+        build: . # location of dockerfile 
+        container_name: ashuc3333
+        ports:
+            -  "5511:80"
+
+   

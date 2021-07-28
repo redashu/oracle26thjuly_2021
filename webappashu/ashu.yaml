@@ -1,0 +1,22 @@
+version: '3.8'
+volumes: # creating volume 
+ ashudbvol11: # name of volume docker volume create name
+services:
+ ashudbsvc:
+  image: mysql
+  command: --default-authentication-plugin=mysql_native_password
+  container_name: ashudbc1
+  restart: always
+  environment:
+   MYSQL_ROOT_PASSWORD: oracle99
+  volumes: # mounting the same volume we created above
+   - "ashudbvol11:/var/lib/mysql/"
+
+ ashufrontednapp:
+  image: adminer # docker image from docker hub 
+  container_name: ashuwebc1 
+  restart: always
+  depends_on: 
+   - ashudbsvc  # name of app of db 
+  ports: # port forwarding 
+   - "8080:8080" 
