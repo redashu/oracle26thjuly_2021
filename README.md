@@ -258,5 +258,81 @@ minion2      Ready    <none>                 7h54m   v1.21.3
 
 ```
 
+### YAML generator 
 
-  
+```
+kubectl   run ashujavapod1 --image=dockerashu/ashujavaweb:v1    --port 8080 --dry-run=client -o yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashujavapod1
+  name: ashujavapod1
+spec:
+  containers:
+  - image: dockerashu/ashujavaweb:v1
+    name: ashujavapod1
+    ports:
+    - containerPort: 8080
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+
+```
+
+### 
+
+```
+1846  kubectl   run ashujavapod1 --image=dockerashu/ashujavaweb:v1    --port 8080 --dry-run=client -o yaml 
+ 1847  kubectl   run ashujavapod1 --image=dockerashu/ashujavaweb:v1    --port 8080 --dry-run=client -o json 
+❯ kubectl   run ashujavapod1 --image=dockerashu/ashujavaweb:v1    --port 8080 --dry-run=client -o yaml  >javapod.yaml
+
+```
+
+### done with pod deploy 
+
+```
+❯ kubectl  apply -f  javapod.yaml
+pod/ashujavapod1 created
+❯ kubectl  get  po
+NAME           READY   STATUS    RESTARTS   AGE
+ashujavapod1   1/1     Running   0          4s
+ashupod1       1/1     Running   0          30m
+bpod1          1/1     Running   0          13m
+bpod2          1/1     Running   0          87s
+jeypod1        1/1     Running   0          11m
+jitendrapod1   1/1     Running   0          13m
+krispod1       1/1     Running   0          12m
+nishpod1       1/1     Running   0          13m
+palashpod1     1/1     Running   0          9m42s
+rashmipod1     1/1     Running   0          12m
+❯ kubectl  get  po ashujavapod1  -o wide
+NAME           READY   STATUS    RESTARTS   AGE   IP             NODE      NOMINATED NODE   READINESS GATES
+ashujavapod1   1/1     Running   0          19s   192.168.34.9   minion1   <none>           <none>
+
+```
+
+### accessing app 
+
+### method 1 
+
+```
+❯ kubectl   port-forward  ashujavapod1  1234:8080
+Forwarding from 127.0.0.1:1234 -> 8080
+Forwarding from [::1]:1234 -> 8080
+Handling connection for 1234
+Handling connection for 1234
+
+```
+
+### method2
+
+## Introduction  to service 
+
+<img src="svc.png">
+
+
+
