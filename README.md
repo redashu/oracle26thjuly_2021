@@ -275,3 +275,165 @@ service/ashusvc2 replaced
 
 ```
 
+
+### scaling in k8s
+
+<img src="scale.png">
+
+### scaling pod manually 
+
+```
+❯ kubectl  scale  deploy  ashudep1  --replicas=5
+deployment.apps/ashudep1 scaled
+❯ kubectl   get  deploy
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+ashudep1   2/5     5            2           14m
+❯ kubectl  get  po
+NAME                        READY   STATUS              RESTARTS   AGE
+ashudep1-7d84b5c475-d8w6h   1/1     Running             0          80s
+ashudep1-7d84b5c475-dtjfq   0/1     ContainerCreating   0          5s
+ashudep1-7d84b5c475-svf8s   1/1     Running             0          14m
+ashudep1-7d84b5c475-t7g7x   1/1     Running             0          5s
+ashudep1-7d84b5c475-vw6xd   0/1     ContainerCreating   0          5s
+❯ kubectl  get  po
+NAME                        READY   STATUS    RESTARTS   AGE
+ashudep1-7d84b5c475-d8w6h   1/1     Running   0          85s
+ashudep1-7d84b5c475-dtjfq   1/1     Running   0          10s
+ashudep1-7d84b5c475-svf8s   1/1     Running   0          14m
+ashudep1-7d84b5c475-t7g7x   1/1     Running   0          10s
+ashudep1-7d84b5c475-vw6xd   1/1     Running   0          10s
+❯ kubectl   get  deploy
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+ashudep1   5/5     5            5           14m
+
+```
+
+### cleaning my namespace 
+
+```
+❯ kubectl  delete all  --all
+pod "ashudep1-7d84b5c475-svf8s" deleted
+service "ashusvc2" deleted
+deployment.apps "ashudep1" deleted
+
+```
+
+## sample app depoy from scratch 
+
+
+```
+1970  cd oraclewebapp
+ 1971  ls
+ 1972  docker  build -t   dockerashu/orwebapp:v1  . 
+ 1973  docker login -u dockerashu
+ 1974  docker  push  dockerashu/orwebapp:v1  
+ 1975  history
+ 1976  cd
+ 1977  history
+ 1978  kubectl  create  deployment  webapp  --image=dockerashu/orwebapp:v1  --dry-run=client -o yaml 
+ 1979  kubectl  create  deployment  webapp  --image=dockerashu/orwebapp:v1  --dry-run=client -o yaml >orweb.yaml
+ 
+ ```
+ 
+ ## creating service to auto match label of POD 
+ 
+```
+ kubectl  expose  deploy  webapp  --type NodePort  --port 80  --name  ashusvc123 --dry-run=client -o yaml
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: webapp
+  name: ashusvc123
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: webapp
+  type: NodePort
+status:
+  loadBalancer: {}
+  
+ ```
+ 
+## accessing app using domain 
+
+<img src="lb.png">
+
+## scaling app 
+
+```
+❯ kubectl  get  deploy
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+webapp   1/1     1            1           89m
+❯ kubectl  scale  deploy  webapp  --replicas=3
+deployment.apps/webapp scaled
+❯ kubectl  get  deploy
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+webapp   3/3     3            3           89m
+
+```
+
+### deployment in real world
+
+<img src="dep1.png">
+
+### updating image
+
+```
+2005  docker  build -t   dockerashu/orwebapp:v2  . 
+ 2006  history
+ 2007  docker  push dockerashu/orwebapp:v2
+ 2008  kubectl  get  deploy 
+ 2009  kubectl  describe  deploy  webapp
+ 2010  kubectl  set  image  deployment  webapp  orwebapp=dockerashu/orwebapp:v2  
+ 2011  kubectl  get  deploy 
+ 2012  kubectl  get  po 
+ 
+ ```
+ 
+ ### updatin image
+ 
+ ```
+ 2005  docker  build -t   dockerashu/orwebapp:v2  . 
+ 2006  history
+ 2007  docker  push dockerashu/orwebapp:v2
+ 2008  kubectl  get  deploy 
+ 2009  kubectl  describe  deploy  webapp
+ 2010  kubectl  set  image  deployment  webapp  orwebapp=dockerashu/orwebapp:v2  
+ 2011  kubectl  get  deploy 
+ 2012  kubectl  get  po 
+ 
+ ```
+ 
+ ### rollback 
+ 
+ ```
+ 010  kubectl  set  image  deployment  webapp  orwebapp=dockerashu/orwebapp:v2  
+ 2011  kubectl  get  deploy 
+ 2012  kubectl  get  po 
+❯ kubectl  rollout  undo deploy  webapp
+deployment.apps/webapp rolled back
+❯ kubectl  rollout  undo deploy  webapp
+deployment.apps/webapp rolled back
+
+```
+
+### Introduction to LB svc
+
+```
+❯ kubectl  get  deploy
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+webapp   3/3     3            3           118m
+❯ kubectl expose deploy webapp  --type LoadBalancer  --port 80 --name lbsvc
+service/lbsvc exposed
+❯ kubectl  get  svc
+NAME         TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+ashusvc123   NodePort       10.109.254.187   <none>        80:32729/TCP   47m
+lbsvc        LoadBalancer   10.104.87.14     <pending>     80:31965/TCP   8s
+
+```
+
