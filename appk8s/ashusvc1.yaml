@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashusvc1
+  name: ashusvc1 # name of service 
+spec:
+  ports:
+  - name: 1234-8080
+    port: 1234 # service ip will be bounded with this 
+    protocol: TCP
+    targetPort: 8080 # pod app port 
+    nodePort: 31212
+  selector: # Pod FInder using label 
+    x: ashujavapp # this label of pod where to forward traffic 
+  type: NodePort # type of service 
+status:
+  loadBalancer: {}
