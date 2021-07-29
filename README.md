@@ -508,3 +508,18 @@ apiservice.apiregistration.k8s.io/v1beta1.metrics.k8s.io created
 ```
 
 
+### hpa deploy
+
+```
+❯ kubectl  autoscale  deploy  ashuweb  --cpu-percent=70  --min=1  --max=100
+horizontalpodautoscaler.autoscaling/ashuweb autoscaled
+❯ kubectl  get  hpa
+NAME      REFERENCE            TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+ashuweb   Deployment/ashuweb   <unknown>/70%   1         100       0          6s
+❯ kubectl  get  hpa
+NAME      REFERENCE            TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
+ashuweb   Deployment/ashuweb   0%/70%    1         100       1          23s
+
+```
+
+
