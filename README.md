@@ -436,4 +436,75 @@ ashusvc123   NodePort       10.109.254.187   <none>        80:32729/TCP   47m
 lbsvc        LoadBalancer   10.104.87.14     <pending>     80:31965/TCP   8s
 
 ```
+### k8s dashboard deployment 
+
+```
+❯ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.2.0/aio/deploy/recommended.yaml
+namespace/kubernetes-dashboard created
+serviceaccount/kubernetes-dashboard created
+service/kubernetes-dashboard created
+secret/kubernetes-dashboard-certs created
+secret/kubernetes-dashboard-csrf created
+secret/kubernetes-dashboard-key-holder created
+configmap/kubernetes-dashboard-settings created
+role.rbac.authorization.k8s.io/kubernetes-dashboard created
+clusterrole.rbac.authorization.k8s.io/kubernetes-dashboard created
+rolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
+clusterrolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
+deployment.apps/kubernetes-dashboard created
+service/dashboard-metrics-scraper created
+deployment.apps/dashboard-metrics-scraper created
+❯ kubectl  get ns
+NAME                   STATUS   AGE
+ashuproject            Active   5h
+bramhans               Active   4h59m
+default                Active   31h
+jeyproject             Active   4h58m
+jitnamespace           Active   4h59m
+krisproject            Active   4h58m
+kube-node-lease        Active   31h
+kube-public            Active   31h
+kube-system            Active   31h
+kubernetes-dashboard   Active   16s
+nishantproject         Active   4h55m
+palashproject          Active   4h58m
+rashmins               Active   4h56m
+shysproject            Active   4h58m
+
+```
+
+### changing svc type
+
+```
+❯ kubectl  edit  svc kubernetes-dashboard   -n kubernetes-dashboard
+service/kubernetes-dashboard edited
+❯ kubectl  get  svc  -n kubernetes-dashboard
+NAME                        TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)         AGE
+dashboard-metrics-scraper   ClusterIP   10.106.245.160   <none>        8000/TCP        3m55s
+kubernetes-dashboard        NodePort    10.100.177.171   <none>        443:32097/TCP   4m1s
+
+```
+
+## HPA 
+
+<img src="ver.png">
+
+<img src="metrc.png">
+
+## Deploying metric server to gather resource consumption 
+
+```
+ kubectl  apply  -f  https://raw.githubusercontent.com/redashu/k8s/hpa/hpa/components.yaml
+serviceaccount/metrics-server created
+clusterrole.rbac.authorization.k8s.io/system:aggregated-metrics-reader created
+clusterrole.rbac.authorization.k8s.io/system:metrics-server created
+rolebinding.rbac.authorization.k8s.io/metrics-server-auth-reader created
+clusterrolebinding.rbac.authorization.k8s.io/metrics-server:system:auth-delegator created
+clusterrolebinding.rbac.authorization.k8s.io/system:metrics-server created
+service/metrics-server created
+deployment.apps/metrics-server created
+apiservice.apiregistration.k8s.io/v1beta1.metrics.k8s.io created
+
+```
+
 
