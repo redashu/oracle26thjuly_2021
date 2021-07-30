@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashuweb
+  name: ashuweb # name of deploy 
+spec:
+  replicas: 1 # default number of PODs 
+  selector:
+    matchLabels:
+      app: ashuweb
+  strategy: {}
+  template: # template will be used by deployment 
+    metadata:
+      creationTimestamp: null
+      labels: # label of pod 
+        app: ashuweb
+    spec:
+      containers:
+      - image: dockerashu/orwebapp:v2 # image 
+        name: orwebapp # name container 
+        resources: 
+         requests: # limiting resource to container 
+          cpu: 200m # 1 vcpu == 1000 mili core 
+         limits:
+          cpu: 500m # max container can use 
+status: {}

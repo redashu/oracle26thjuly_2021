@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashudd1
+  name: ashudd1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ashudd1
+  strategy: {}
+  template: # use template  
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ashudd1
+    spec:
+      volumes: 
+      - name: ashuvolx1 
+        hostPath:  # using data of Host inside COntainer 
+         path: /etc
+         type: Directory 
+      containers:
+      - image: alpine
+        name: alpine
+        volumeMounts:
+        - name: ashuvolx1
+          mountPath: /myetc 
+          readOnly: True 
+        command: ["sh","-c","ping fb.com"] 
+        resources: {}
+status: {}

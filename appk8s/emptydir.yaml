@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: alpod
+  name: alpod
+spec:
+  volumes: # to create volume 
+  - name: ashuvol1 # name of volume
+    emptyDir: {} # this is take storage from minion where pod will be scheduled 
+  containers: # to create container 
+  - image: nginx 
+    name: ashuc2
+    volumeMounts:
+    - name: ashuvol1
+      mountPath: /usr/share/nginx/html/
+      readOnly: True 
+  - image: alpine
+    name: alpod
+    volumeMounts: # mounting above created volume 
+    - name: ashuvol1 # name of volume to mount 
+      mountPath: /mnt/oracle # this location will be auto created
+    command: ["sh","-c","while true;do  echo 'Hello <input>' >>/mnt/oracle/index.html;sleep 5;done"]
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}

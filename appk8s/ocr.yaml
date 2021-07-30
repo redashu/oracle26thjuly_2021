@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: webappocr
+  name: webappocr # name of deployment 
+spec:
+  replicas: 1 # no of pod 
+  selector:
+    matchLabels:
+      app: webappocr
+  strategy: {}
+  template: # template to create POD by Deployment 
+    metadata:
+      creationTimestamp: null
+      labels: # label of pod 
+        app: webappocr
+    spec:
+      imagePullSecrets: # to call secret for image registy 
+      - name: ashusec1 # name of docker registy secret 
+      containers:
+      - image: phx.ocir.io/axmbtg8judkl/webapp:v1 # docker image from OCR
+        name: webapp # name of container 
+        resources: {}
+status: {}

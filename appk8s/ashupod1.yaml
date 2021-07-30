@@ -1,0 +1,10 @@
+apiVersion: v1 # its a k8s apiserver version to accept pod request
+kind: Pod # object of k8s  
+metadata: # used for basic info about pod 
+ name: ashupod1  # name of pod 
+spec:
+ containers:  # info about container 
+ - image: alpine # image from docker hub 
+   name: ashuc1  # name of container
+   command: ["sh","-c","ping fb.com"] # process to be run by container 
+
