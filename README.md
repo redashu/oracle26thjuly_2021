@@ -289,3 +289,33 @@ GREP_COLORS              hostname
 
 ```
 
+### Monitoring minion1 with portainer 
+
+```
+kubectl  create  deployment  webuiminion1  --image=portainer/portainer  --dry-run=client -o yaml   >portainer.yaml
+❯ kubectl get  no
+NAME         STATUS   ROLES                  AGE    VERSION
+masternode   Ready    control-plane,master   2d4h   v1.21.3
+minion1      Ready    <none>                 2d4h   v1.21.3
+minion2      Ready    <none>                 2d4h   v1.21.3
+
+
+```
+
+### 
+
+```
+❯ kubectl apply -f portainer.yaml
+deployment.apps/webuiminion1 created
+❯ kubectl  get  deploy
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ashudd1        1/1     1            1           15m
+webuiminion1   1/1     1            1           8s
+
+```
+
+### CLoud based k8s 
+
+<img src="k8scl.png">
+
+
