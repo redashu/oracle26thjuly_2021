@@ -147,3 +147,145 @@ s1     NodePort   10.101.185.204   <none>        80:32231/TCP   6s
 
 ```
 
+## storage in k8s
+
+<img src="st.png">
+
+## volume plugins for k8s 
+
+[volumes](https://kubernetes.io/docs/concepts/storage/volumes/)
+
+## storage source for volume 
+
+<img src="sts.png">
+
+## emptyDir volume implementation 
+
+```
+❯ kubectl  run  alpod  --image=alpine  --dry-run=client  -o  yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: alpod
+  name: alpod
+spec:
+  containers:
+  - image: alpine
+    name: alpod
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+❯ kubectl  run  alpod  --image=alpine  --dry-run=client  -o  yaml    >emptydir.yaml
+
+```
+
+### introdution of emptyDir type volume 
+
+<img src="emp.png">
+
+### 
+
+```
+❯ kubectl get  po
+NAME    READY   STATUS    RESTARTS   AGE
+alpod   1/1     Running   0          2m45s
+❯ kubectl get  po  -o wide
+NAME    READY   STATUS    RESTARTS   AGE     IP                NODE      NOMINATED NODE   READINESS GATES
+alpod   1/1     Running   0          2m56s   192.168.179.243   minion2   <none>           <none>
+❯ kubectl  exec  -ti   alpod  -- sh
+/ # cd  /mnt/oracle/
+/mnt/oracle # ls
+data.txt
+/mnt/oracle # cat  data.txt 
+Hello
+Hello
+Hello
+Hello
+Hello
+Hello
+
+```
+
+## Idea of multi contianer pod 
+
+<img src="mulc.png">
+
+## reading and writing data 
+
+<img src="mcc.png">
+
+##
+
+```
+❯ kubectl replace -f  emptydir.yaml --force
+pod "alpod" deleted
+pod/alpod replaced
+❯ kubectl  get  po
+NAME    READY   STATUS    RESTARTS   AGE
+alpod   2/2     Running   0          6s
+
+```
+
+## containing containers in pod
+
+```
+❯ kubectl  get  po
+NAME    READY   STATUS    RESTARTS   AGE
+alpod   2/2     Running   0          6s
+❯ kubectl  exec  -it  alpod  --  bash
+Defaulted container "ashuc2" out of: ashuc2, alpod
+root@alpod:/# cd /usr/share/nginx/html/
+root@alpod:/usr/share/nginx/html# ls
+index.html
+root@alpod:/usr/share/nginx/html# exit
+exit
+❯ kubectl  exec  -it  alpod -c alpod  --  sh
+/ # cd /mnt/oracle/
+/mnt/oracle # ls
+index.html
+/mnt/oracle # 
+
+
+```
+
+### creating svc of pod 
+
+```
+❯ kubectl  get  po
+NAME    READY   STATUS    RESTARTS   AGE
+alpod   2/2     Running   0          3m20s
+❯ kubectl  expose pod  alpod  --type NodePort  --port 80 --name  ashusvc111
+service/ashusvc111 exposed
+❯ kubectl get  svc
+NAME         TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+ashusvc111   NodePort   10.107.149.15   <none>        80:31097/TCP   5s
+
+```
+
+## HostPath VOlume demo 
+
+```
+❯ kubectl apply -f  hostpath.yaml
+deployment.apps/ashudd1 created
+❯ kubectl  get  deploy
+NAME      READY   UP-TO-DATE   AVAILABLE   AGE
+ashudd1   1/1     1            1           6s
+❯ kubectl  get  po
+NAME                       READY   STATUS    RESTARTS   AGE
+ashudd1-6484f4f75f-ztdrb   1/1     Running   0          12s
+❯ kubectl  exec -it  ashudd1-6484f4f75f-ztdrb  -- sh
+/ # ls
+bin    etc    lib    mnt    opt    root   sbin   sys    usr
+dev    home   media  myetc  proc   run    srv    tmp    var
+/ # cd  myetc/
+/myetc # ls
+DIR_COLORS               hibagent-config.cfg      protocols
+DIR_COLORS.256color      hibinit-config.cfg       python
+DIR_COLORS.lightbgcolor  host.conf                rc.d
+GREP_COLORS              hostname          
+
+```
+
