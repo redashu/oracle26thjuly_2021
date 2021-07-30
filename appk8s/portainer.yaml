@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: webuiminion1
+  name: webuiminion1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webuiminion1
+  strategy: {}
+  template: # template to manage POD 
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: webuiminion1
+    spec:
+      nodeName: minion1 # static scheduling 
+      volumes:
+      - name: ashuvol9
+        hostPath:
+         path: /var/run/docker.sock
+         type: Socket 
+      containers:
+      - image: portainer/portainer
+        name: portainer
+        volumeMounts:
+        - name: ashuvol9
+          mountPath: /var/run/docker.sock
+        ports:
+        - containerPort: 9000
+        resources: {}
+status: {}

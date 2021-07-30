@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashudb
+  name: ashudb # name of deployment 
+spec:
+  replicas: 1 # number of pod 
+  selector:
+    matchLabels:
+      app: ashudb
+  strategy: {}
+  template: # template to created pod 
+    metadata:
+      creationTimestamp: null
+      labels: # label of pod 
+        app: ashudb
+    spec:
+      volumes: # creating volume 
+      - name: ashudbvol  # name of vol 
+        nfs: # data storage source is NFS 
+         server: 172.31.52.109
+         path: /data/ashu
+      containers: # creating container 
+      - image: mysql:5.6 # docker image
+        name: mysql # name of container 
+        volumeMounts: 
+        - name: ashudbvol # name of volume 
+          mountPath: /var/lib/mysql/  # mysql store data in this location by default
+        env: # to create or supply env var values 
+        - name: MYSQL_ROOT_PASSWORD # env var 
+          valueFrom:
+           secretKeyRef: # taking value from secret 
+            name: ashudbsec # name of secret 
+            key: passkey1  # key of secret 
+        resources: {}
+status: {}
+
+# creating db service 
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashudb
+  name: ashudb
+spec:
+  ports:
+  - port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    app: ashudb
+  type: ClusterIP
+status:
+  loadBalancer: {}
+
+# creating fronentd app
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashuwebapp
+  name: ashuwebapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ashuwebapp
+  strategy: {}
+  template: # tempalte to deploy pod 
+    metadata:
+      creationTimestamp: null
+      labels: # label 
+        app: ashuwebapp
+    spec:
+      containers:
+      - image: wordpress:4.8-apache
+        name: wordpress
+        env: 
+        - name: WORDPRESS_DB_HOST
+          value: ashudb # service name of DB deployment 
+        - name: WORDPRESS_DB_PASSWORD
+          valueFrom:
+           secretKeyRef: # calling secret 
+            name: ashudbsec
+            key: passkey1
+        resources: {}
+status: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashuwebapp
+  name: ashuwbsvc
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: ashuwebapp
+  type: NodePort
+status:
+  loadBalancer: {}
