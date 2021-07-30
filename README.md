@@ -318,4 +318,103 @@ webuiminion1   1/1     1            1           8s
 
 <img src="k8scl.png">
 
+### webapp with DB 
+
+### deploying DB 
+
+```
+kubectl  create  deployment   ashudb  --image=mysql:5.6  --dry-run=client -o yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashudb
+  name: ashudb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ashudb
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ashudb
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        resources: {}
+        
+        
+  ```
+
+## creating secret for DB pass
+
+```
+❯ kubectl  create secret  generic  ashudbsec  --from-literal  passkey1=Oracledb99
+secret/ashudbsec created
+❯ kubectl  get  secret
+NAME                  TYPE                                  DATA   AGE
+ashudbsec             Opaque                                1      32s
+ashusec1              kubernetes.io/dockerconfigjson        1      3h56m
+default-token-2cktw   kubernetes.io/service-account-token   3      28h
+
+
+
+```
+
+### deploying DB pod 
+
+```
+❯ kubectl  apply -f  ashuwebdb.yaml
+deployment.apps/ashudb created
+❯ kubectl  get  deploy
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+ashudb   0/1     1            0           5s
+❯ kubectl  get  po
+NAME                      READY   STATUS              RESTARTS   AGE
+ashudb-5dd6b55c7c-2qqb8   0/1     ContainerCreating   0          9s
+❯ kubectl  get  po  -w
+NAME                      READY   STATUS    RESTARTS   AGE
+ashudb-5dd6b55c7c-2qqb8   1/1     Running   0          13s
+^C%                                                        
+
+```
+
+### creating deploym
+
+
+```
+ kubectl  create  deployment  ashuwebapp --image=wordpress:4.8-apache  --dry-run=client -o yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashuwebapp
+  name: ashuwebapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ashuwebapp
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ashuwebapp
+    spec:
+      containers:
+      - image: wordpress:4.8-apache
+        name: wordpress
+        resources: {}
+status: {}
+
+
+```
+
 
